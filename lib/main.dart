@@ -7,6 +7,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 
 // For the testing purposes, you should probably use https://pub.dev/packages/uuid.
 String randomString() {
@@ -44,6 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<types.Message> _messages = [];
   final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
   final _agent = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac2');
+  FlutterTts flutterTts = FlutterTts();
+
+  // STT
   late stt.SpeechToText _speech;
   bool _isListening = false;
 
@@ -51,6 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+    _startListening();
+    // flutterTts = FlutterTts();
+    flutterTts.setCompletionHandler(() {
+      _onSpeechSynthesisCompleted();
+    });
+  }
+
+  // 音声合成（TTS）が完了した後に呼ばれるメソッド
+  void _onSpeechSynthesisCompleted() async {
+    // 音声認識を再開するためのロジック
     _startListening();
   }
 
@@ -78,6 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() => _isListening = false);
   }
 
+
+  Future<void> _speak(String text) async {
+    if (text.isNotEmpty) {
+      await flutterTts.speak(text);
+    }
+  }
+
+  // main  
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Chat(
@@ -102,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // ChatGPTに聞く
     final chatCompletion = await OpenAI.instance.chat
-        .create(model: 'gpt-3.5-turbo', messages: [newUserMessage]);
+        .create(model: 'gpt-4-0125-preview', messages: [newUserMessage]);
 
     return Future<String>.value(chatCompletion.choices.first.message.content);
   }
@@ -118,6 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _addMessage(userMessage);
 
     final response = await sendMessage(message.text);
+
+    _speak(response);
 
     final chatgptMessage = types.TextMessage(
       author: _agent,

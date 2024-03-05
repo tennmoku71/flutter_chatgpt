@@ -40,6 +40,7 @@ dependencies:
   build_runner: any
   flutter_dotenv: ^5.0.2
   speech_to_text: any
+  flutter_tts: any
 
 dev_dependencies:
   flutter_test:
