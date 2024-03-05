@@ -39,6 +39,7 @@ dependencies:
   dart_openai: ^2.0.1
   build_runner: any
   flutter_dotenv: ^5.0.2
+  speech_to_text: any
 
 dev_dependencies:
   flutter_test:
