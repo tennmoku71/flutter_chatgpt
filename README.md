@@ -1,16 +1,18 @@
-# myapp
+# setup
+android studioをインストールし、起動画面の設定からコマンドラインツールをインストールしてください。
+VSCODEのプラグインからflutterをインストールすると、右下に本体をインストールするかを聞かれるのでOKとする
+場所はC:/devがよい。
+その後flutter docktorがすべて緑になればOK
 
-A new Flutter project.
+# edit
+lib/main.dartを基本的には触る
 
-## Getting Started
+# android build
+権限周りは以下を修正
+android/app/src/main/AndroidManifest.xml
 
-This project is a starting point for a Flutter application.
+```
+flutter build apk
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+成果物はbuild/app/output/apk/xxxxx.apkに生成される。
